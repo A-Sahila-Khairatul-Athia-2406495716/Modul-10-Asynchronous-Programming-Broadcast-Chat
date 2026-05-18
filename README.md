@@ -15,3 +15,17 @@
 Server listening connection di port 2000. Setiap client yang connect akan mendapatkan welcome message dari server. Ketika salah satu client mengetikkan pesan, server menerima pesan tersebut lalu membroadcast ke semua client yang sedang terhubung melalui tokio broadcast channel.
 
 Ini bekerja secara asynchronous. Tiap koneksi client ditangani oleh satu async task (bukan thread baru), sehingga lebih hemat resource. Di dalam setiap task, `tokio::select!` menunggu dua hal sekaligus: pesan baru dari client (lalu di-broadcast ke semua), dan pesan broadcast dari server (lalu dikirim balik ke client ini). Tanpa `tokio::select!`, kita harus memilih salah satu, tidak bisa keduanya sekaligus.
+
+
+## Experiment 2.2: Modifying port
+
+### Output
+![Experiment 2.2](assets/images/2_2.png)
+
+### Explanation
+Karena WebSocket adalah protokol komunikasi dua arah, kedua sisi (client & server) harus menggunakan port yang sama agar bisa terhubung. Jadi, perubahan dilakukan pada file:
+
+- `src/bin/server.rs`: `TcpListener::bind("127.0.0.1:2000")` jadi `TcpListener::bind("127.0.0.1:8080")`
+- `src/bin/client.rs`: URI `ws://127.0.0.1:2000` jadi `ws://127.0.0.1:8080`
+
+Both are using the same protocol `ws://`, karena WebSocket mendukung komunikasi dua arah yang persistent, cocok untuk aplikasi chat. Di `client.rs`, protokol didefinisikan di URI `ws://127.0.0.1:8080`. Di `server.rs`, protokol didefinisikan secara implisit melalui `ServerBuilder::new().accept(socket)`.
