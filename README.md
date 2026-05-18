@@ -29,3 +29,16 @@ Karena WebSocket adalah protokol komunikasi dua arah, kedua sisi (client & serve
 - `src/bin/client.rs`: URI `ws://127.0.0.1:2000` jadi `ws://127.0.0.1:8080`
 
 Both are using the same protocol `ws://`, karena WebSocket mendukung komunikasi dua arah yang persistent, cocok untuk aplikasi chat. Di `client.rs`, protokol didefinisikan di URI `ws://127.0.0.1:8080`. Di `server.rs`, protokol didefinisikan secara implisit melalui `ServerBuilder::new().accept(socket)`.
+
+
+## Experiment 2.3: Small changes, add IP and Port
+
+### Output
+![Experiment 2.3](assets/images/2_3.png)
+
+### Explanation
+Perubahan dilakukan di `src/bin/server.rs` pada fungsi `handle_connection`. 
+- **Before**: `bcast_tx.send(text.into())?`. Pesan yang dibroadcast hanya berisi teks mentah dari client.
+- **After**: `bcast_tx.send(format!("{addr}: {text}"))?`
+
+Variabel `addr` yang sudah ada sebagai parameter fungsi `handle_connection` berisi IP dan port dari client yang mengirim pesan. Kemudian addr dan text digabungkan menggunakan `format!`. Hasilnya, setiap client yang menerima pesan sekarang bisa tahu siapa pengirimnya (based on IP & port), misal: `127.0.0.1:54321: hello`.
