@@ -44,7 +44,7 @@ Perubahan dilakukan di `src/bin/server.rs` pada fungsi `handle_connection`.
 Variabel `addr` yang sudah ada sebagai parameter fungsi `handle_connection` berisi IP dan port dari client yang mengirim pesan. Kemudian addr dan text digabungkan menggunakan `format!`. Hasilnya, setiap client yang menerima pesan sekarang bisa tahu siapa pengirimnya (based on IP & port), misal: `127.0.0.1:54321: hello`.
 
 
-## Bonus: Rust Websocket server for YewChat!
+## (Tutorial 3) Bonus: Rust Websocket server for YewChat!
 
 Server JavaScript (SimpleWebsocketServer) diganti dengan server Rust dari Tutorial 2. YewChat tidak perlu diubah sama sekali karena format JSON yang digunakan tetap sama.
 
